@@ -1,70 +1,78 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 struct node
 {
-    int item;
-    struct node *left;
-    struct node *right;
+  int data;
+  struct node *left, *right;
 };
-void inOrder(struct node *root)
+struct node *newNode (int item)
 {
-    if (root == NULL)
-        return;
-    inOrder(root->left);
-    printf(" %d ", root->item);
-    inOrder(root->right);
+  struct node *temporary = (struct node *) malloc (sizeof (struct node));
+  temporary->data = item;
+  temporary->left = temporary->right = NULL;
+  return temporary;
 }
-void preOrder(struct node *root)
+void postorder (struct node *root)
 {
-    if (root == NULL)
-        return;
-    printf(" %d ", root->item);
-    preOrder(root->left);
-    preOrder(root->right);
+  if (root != NULL)
+    {
+      postorder (root->left);
+      postorder (root->right);
+      printf ("%d ", root->data);
+    }
 }
-void postOrder(struct node *root)
+void preorder (struct node *root)
 {
-    if (root == NULL)
-        return;
-    postOrder(root->left);
-    postOrder(root->right);
-    printf(" %d ", root->item);
+  if (root != NULL)
+    {
+      printf ("%d ", root->data);
+      preorder (root->left);
+      preorder (root->right);
+    }
 }
-struct node *createNode(item)
-{
-    struct node *newNode = malloc(sizeof(struct node));
-    newNode->item = item;
-    newNode->left = NULL;
-    newNode->right = NULL;
 
-    return newNode;
-}
-struct node *inserAtLeft(struct node *root, int item)
+void inorder (struct node *root)
 {
-    root->left = createNode(item);
-    return root->left;
+  if (root != NULL)
+    {
+      inorder (root->left);
+      printf ("%d ", root->data);
+      inorder (root->right);
+    }
 }
-struct node *insertAtRight(struct node *root, int item)
+struct node *insert (struct node *node, int data)
 {
-    root->right = createNode(item);
-    return root->right;
+ 
+  if (node == NULL)
+    return newNode (data);
+
+  if (data < node->data)
+    node->left = insert (node->left, data);
+  else if (data > node->data)
+    node->right = insert (node->right, data);
+
+  return node;
 }
-int main()
+
+int main ()
 {
-	int a,b,c,d,e;
-    struct node *root = createNode(a);
-    inserAtLeft(root, b);
-    insertAtRight(root, c);
+  struct node *root = NULL;
+  root = insert (root, 9);
+  insert (root, 7);
+  insert (root, 5);
+  insert (root, 8);
+  insert (root, 14);
+  insert (root, 11);
+  insert (root, 16);
 
-    inserAtLeft(root->left, d);
-    insertAtRight(root->left, e);
+  printf ("The postorder is :\n");
+  postorder (root);
 
-    printf("Inorder traversal : ");
-    inOrder(root);
+  printf ("\nThe preorder is :\n");
+  preorder (root);
 
-    printf("\nPreorder traversal : ");
-    preOrder(root);
+  printf ("\nThe inorder is :\n");
+  inorder (root);
 
-    printf("\nPostorder traversal : ");
-    postOrder(root);
+  return 0;
 }
